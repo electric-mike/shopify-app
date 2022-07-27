@@ -24,6 +24,10 @@ export default function App() {
                   label: "Page name",
                   destination: "/pagename",
                 },
+                {
+                  label: "Not found",
+                  destination: "/NotFound",
+                }
               ]}
             />
             <Routes pages={pages} />
