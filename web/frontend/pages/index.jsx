@@ -17,7 +17,7 @@ import { ProductsCard, ShortcodesCard } from "../components";
 export default function HomePage() {
   return (
     <Page narrowWidth>
-      <TitleBar title="Welcome to EE App V2" primaryAction={null} />
+      <TitleBar title="EE App V2" primaryAction={null} />
       <Layout>
         <Layout.Section>
           <Card sectioned>

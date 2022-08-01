@@ -1,7 +1,13 @@
-import { useState, useCallback } from "react";
-import { Card, Page, Layout, TextContainer, Heading } from "@shopify/polaris";
+import { useState, setState, useCallback } from "react";
+import { Card, Page, Layout, TextContainer, Heading, Button } from "@shopify/polaris";
+import { EditMinor } from '@shopify/polaris-icons';
 import { TitleBar, useNavigate } from "@shopify/app-bridge-react";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
+
+const DEFAULT_SHORTCODE_FILES = [
+  'snippets/shortcode.liquid',
+  'snippets/shortcode-render.liquid'
+]
 
 export default function Shortcodes() {
   const emptyToastProps = { content: null };
@@ -28,6 +34,14 @@ export default function Shortcodes() {
     return data && data.data || false
   }
 
+  const isDefaultShortcode = (codeKey) => {
+    return DEFAULT_SHORTCODE_FILES.includes(codeKey)
+  }
+
+  const editShortcode = (code) => {
+    navigate(`/edit-shortcode/${code.checksum}?key=${code.key}`)
+  }
+
   return (
     <Page>
       <TitleBar
@@ -36,22 +50,28 @@ export default function Shortcodes() {
         //   content: "Primary action",
         //   onAction: () => console.log("Primary action"),
         // }}
-        // secondaryActions={[
-        //   {
-        //     content: "Secondary action",
-        //     onAction: () => console.log("Secondary action"),
-        //   },
-        // ]}
+        secondaryActions={[
+          {
+            content: "Back Home",
+            onAction: () => navigate('/'),
+          },
+        ]}
       />
         {shortcodes().length > 0 ? (
           <Layout>
             <Layout.Section>
-              {shortcodes().map((code) => (
-                <Card sectioned>
+              {shortcodes().map((code, index) => (
+                <Card sectioned key={index}>
                   <Heading>{code.key}</Heading>
                   <TextContainer>
                     <p>{code.created}</p>
                   </TextContainer>
+                  <br />
+                  {isDefaultShortcode(code.key) ? (
+                    <p>This is a required section; cannot modify</p>
+                  ) : (
+                    <Button icon={EditMinor} onClick={() => editShortcode(code)}>Edit Shortcode</Button>
+                  )}
                 </Card>
               ))}
             </Layout.Section>
