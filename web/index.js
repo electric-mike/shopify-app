@@ -9,6 +9,7 @@ import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import { setupGDPRWebHooks } from "./gdpr.js";
 import productCreator from "./helpers/product-creator.js";
+import { getShortcodes, shortcodeCreator } from "./helpers/shortcode-files.js";
 import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 
@@ -132,6 +133,49 @@ export async function createServer(
       error = e.message;
     }
     res.status(status).send({ success: status === 200, error });
+  });
+
+  // @TODO create endpoint for pushing liquid files into snippets
+  app.get("/api/shortcodes/get", async (req, res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    let status = 200;
+    let error = null;
+    let data = null;
+
+    try {
+      data = await getShortcodes(session);
+    } catch (e) {
+      console.log(`Failed to process shortcodes/get: ${e.message}`);
+      status = 500;
+      error = e.message;
+    }
+
+    res.status(status).send({ success: status === 200, error, data: data });
+  });
+
+  app.get("/api/shortcodes/create", async (req, res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    let status = 200;
+    let error = null;
+    let data = null;
+
+    try {
+      data = await shortcodeCreator(session);
+    } catch (e) {
+      console.log(`Failed to process shortcodes/create: ${e.message}`);
+      status = 500;
+      error = e.message;
+    }
+
+    res.status(status).send({ success: status === 200, error, data: data });
   });
 
   // All endpoints after this point will have access to a request.body

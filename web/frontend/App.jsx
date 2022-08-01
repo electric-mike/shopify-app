@@ -21,13 +21,17 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
-                  label: "Page name",
-                  destination: "/pagename",
+                  label: "Shortcodes",
+                  destination: "/shortcodes",
                 },
-                {
-                  label: "Not found",
-                  destination: "/NotFound",
-                }
+                // {
+                //   label: "Page name",
+                //   destination: "/pagename",
+                // },
+                // {
+                //   label: "Not found",
+                //   destination: "/NotFound",
+                // }
               ]}
             />
             <Routes pages={pages} />
