@@ -1,8 +1,9 @@
 import { useState, setState, useCallback } from "react";
 import { Card, Page, Layout, TextContainer, Heading, Button } from "@shopify/polaris";
 import { EditMinor } from '@shopify/polaris-icons';
-import { TitleBar, useNavigate } from "@shopify/app-bridge-react";
+import { Toast, TitleBar, useNavigate } from "@shopify/app-bridge-react";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
+import { ShortcodesInfoCard } from "../components/ShortcodesInfoCard.jsx"
 
 const DEFAULT_SHORTCODE_FILES = [
   'snippets/shortcode.liquid',
@@ -42,54 +43,62 @@ export default function Shortcodes() {
     navigate(`/edit-shortcode/${code.checksum}?key=${code.key}`)
   }
 
+  const toastMarkup = toastProps.content && !isRefetchingCount && (
+    <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
+  );
+
   return (
-    <Page>
-      <TitleBar
-        title="Shortcodes"
-        // primaryAction={{
-        //   content: "Primary action",
-        //   onAction: () => console.log("Primary action"),
-        // }}
-        secondaryActions={[
-          {
-            content: "Back Home",
-            onAction: () => navigate('/'),
-          },
-        ]}
-      />
-        {shortcodes().length > 0 ? (
-          <Layout>
-            <Layout.Section>
-              {shortcodes().map((code, index) => (
-                <Card sectioned key={index}>
-                  <Heading>{code.key}</Heading>
-                  <TextContainer>
-                    <p>{code.created}</p>
-                  </TextContainer>
-                  <br />
-                  {isDefaultShortcode(code.key) ? (
-                    <p>This is a required section; cannot modify</p>
-                  ) : (
-                    <Button icon={EditMinor} onClick={() => editShortcode(code)}>Edit Shortcode</Button>
-                  )}
+    <>
+      {toastMarkup}
+      <Page>
+        <TitleBar
+          title="View Shortcodes"
+          // primaryAction={{
+          //   content: "Primary action",
+          //   onAction: () => console.log("Primary action"),
+          // }}
+          secondaryActions={[
+            {
+              content: "Back Home",
+              onAction: () => navigate('/'),
+            },
+          ]}
+        />
+          {shortcodes().length > 0 ? (
+            <Layout>
+              <Layout.Section>
+                {shortcodes().map((code, index) => (
+                  <Card sectioned key={index}>
+                    <Heading>{code.key}</Heading>
+                    <TextContainer>
+                      <p>{code.created}</p>
+                    </TextContainer>
+                    <br />
+                    {isDefaultShortcode(code.key) ? (
+                      <p>This is a required section; cannot edit.</p>
+                    ) : (
+                      <Button icon={EditMinor} onClick={() => editShortcode(code)}>Edit Shortcode</Button>
+                    )}
+                  </Card>
+                ))}
+                <ShortcodesInfoCard />
+              </Layout.Section>
+              <Layout.Section secondary>
+                <Card sectioned>
+                  Total Shortcodes: {shortcodes().length}
                 </Card>
-              ))}
-            </Layout.Section>
-            <Layout.Section secondary>
-              <Card sectioned>
-                Total Shortcodes: {shortcodes().length}
-              </Card>
-            </Layout.Section>
-          </Layout>
-        ) : (
-          <Layout>
-            <Layout.Section>
-              <Card sectioned>
-                {isLoadingCount ? (<p>Loading</p>) : (<p>No shortcodes found; please install them!</p>)}
-              </Card>
-            </Layout.Section>
-          </Layout>
-        )}
-    </Page>
+              </Layout.Section>
+            </Layout>
+          ) : (
+            <Layout>
+              <Layout.Section>
+                <Card sectioned>
+                  {isLoadingCount ? (<p>Loading</p>) : (<p>No shortcodes found; please install them!</p>)}
+                </Card>
+              </Layout.Section>
+            </Layout>
+          )}
+      </Page>
+    </>
   );
 }

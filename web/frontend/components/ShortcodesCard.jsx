@@ -7,7 +7,7 @@ import {
   DisplayText,
   TextStyle,
 } from "@shopify/polaris";
-import {useNavigate} from '@shopify/app-bridge-react';
+import { Toast, useNavigate } from '@shopify/app-bridge-react';
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 
 

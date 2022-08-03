@@ -9,7 +9,13 @@ import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import { setupGDPRWebHooks } from "./gdpr.js";
 import productCreator from "./helpers/product-creator.js";
-import { getShortcode, getShortcodes, shortcodeCreator } from "./helpers/shortcode-files.js";
+import { 
+  getShortcode, 
+  getShortcodes, 
+  updateShortcode, 
+  deleteShortcodes, 
+  shortcodeCreator 
+} from "./helpers/shortcode-files.js";
 import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 
@@ -177,6 +183,27 @@ export async function createServer(
     res.status(status).send({ success: status === 200, error, data: data });
   });
 
+  app.get("/api/shortcode/update", async (req, res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    let status = 200;
+    let error = null;
+    let data = null;
+
+    try {
+      data = await updateShortcode(session, req.headers);
+    } catch (e) {
+      console.log(`Failed to process shortcode/update: ${e.message}`);
+      status = 500;
+      error = e.message;
+    }
+
+    res.status(status).send({ success: status === 200, error, data: data });
+  });
+
   app.get("/api/shortcodes/create", async (req, res) => {
     const session = await Shopify.Utils.loadCurrentSession(
       req,
@@ -191,6 +218,27 @@ export async function createServer(
       data = await shortcodeCreator(session);
     } catch (e) {
       console.log(`Failed to process shortcodes/create: ${e.message}`);
+      status = 500;
+      error = e.message;
+    }
+
+    res.status(status).send({ success: status === 200, error, data: data });
+  });
+
+  app.get("/api/shortcodes/delete", async (req, res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    let status = 200;
+    let error = null;
+    let data = null;
+
+    try {
+      data = await deleteShortcodes(session);
+    } catch (e) {
+      console.log(`Failed to process shortcodes/delete: ${e.message}`);
       status = 500;
       error = e.message;
     }

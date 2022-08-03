@@ -8,12 +8,14 @@ import { Asset } from '@shopify/shopify-api/dist/rest-resources/2022-07/index.js
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+// @TODO make dynamic
 const THEME_ID = 121211420856
 
 const SHORTCODE_FILES = [
   'shortcode.liquid',
   'shortcode-render.liquid',
-  'shortcode-product.liquid'
+  'shortcode-product.liquid',
+  'shortcode-youtube.liquid'
 ]
 
 export async function getShortcodes(session) {
@@ -35,12 +37,28 @@ export async function getShortcode(session, key) {
   return asset
 }
 
-export async function deleteShortcode(session, key) {
-  // await Asset.delete({
-  //   session: test_session,
-  //   theme_id: THEME_ID,
-  //   asset: { "key": key },
-  // });
+export async function updateShortcode(session, headers) {
+  const asset = new Asset({session: session});
+    asset.theme_id = THEME_ID;
+    asset.key = headers.asset;
+    asset.value = JSON.parse(headers.value);
+    return await asset.save({
+      update: true,
+    });
+}
+
+export async function deleteShortcodes(session) {
+  const promises = await Promise.all(SHORTCODE_FILES.map(url => {
+    Asset.delete({
+      session: session,
+      theme_id: THEME_ID,
+      asset: { "key": 'snippets/' + url },
+    });
+
+    return asset
+  }))
+
+  return await Promise.all(promises)
 }
 
 
@@ -48,7 +66,7 @@ export async function deleteShortcode(session, key) {
 export async function shortcodeCreator(session) {
   const promises = await Promise.all(SHORTCODE_FILES.map(url => {
     const asset = new Asset({session: session});
-    asset.theme_id = THEME_ID; //@TODO make this dynamic
+    asset.theme_id = THEME_ID;
     asset.key = 'snippets/' + url
     asset.value = fs.readFileSync(join(__dirname + '/../frontend/assets/shortcodes/' + url), "utf8").toString();
     asset.save({

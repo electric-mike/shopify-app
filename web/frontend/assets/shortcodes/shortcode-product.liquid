@@ -2,32 +2,27 @@
 {% assign prod = all_products[handle] %}
 
 {% if prod.title != '' %}
-  <div class="product card-shadow shortcode-product" data-swatches-wrapper>
+  <style>
+    .shortcode-product { display: grid; padding: 1em 0; grid-gap: 1.25em; margin-bottom: 1.25em }
+    @media(min-width: 768px) { .shortcode-product { grid-template-columns: 0.5fr 1fr; } }
+    .shortcode-product .product-image-wrapper { border: none !important; }
+    .shortcode-product .description { margin-bottom: 1.25em; }
+  </style>
+  <div class="product shortcode-product">
     <a class="product-image-wrapper" href="{{ prod.url | within: collection }}">
-      {% render 'flair-product-badges', product: prod %}
-      {%- assign img_url = prod.featured_image.src | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
       <img
-        class="product-image lazyload blur-up"
-        src="{{ 'placeholder-image.png' | asset_url }}"
+        class="product-image"
+        src="{{  prod.featured_image.src | img_url: '360x' }}"
         alt="{{ prod.title | escape }}"
-        data-src="{{ img_url }}"
-        data-widths="[360, 540, 720, 900, 1080, 1600]"
-        data-aspectratio="{{ prod.featured_image.aspect_ratio }}"
-        data-secondary-aspectratio="{{ prod.images[1].aspect_ratio }}"
         data-sizes="auto"
       />
-      <noscript>
-        <img class="lazyloaded" src="{{ prod.featured_image.src | img_url: '800x' }}" alt="{{ prod.title | escape }}">
-      </noscript>
     </a>
     <div class="product-info">
       <a href="{{ prod.url | within: collection }}">
         <h3>{{ prod.title }}</h3>
       </a>
-
       <div class="description"><p>{{ prod.description | strip_html | truncate: 215 }}</p></div>
-
-      <a class="product-image-wrapper button btn" href="{{ prod.url | within: collection }}">Add to Cart</a>
+      <a class="button btn" href="{{ prod.url | within: collection }}">View Product</a>
     </div>
   </div>
 {% endif %}
