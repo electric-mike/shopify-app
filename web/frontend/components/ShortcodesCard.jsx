@@ -72,7 +72,15 @@ export function ShortcodesCard() {
         }}
       >
         {shortcodes().length > 0 ? (
-          <p>Shortcodes Installed, view and modify them!</p>
+          <>
+            <p>Shortcodes Installed, view and modify them!</p>
+            <br />
+            <p><strong>NOTE:</strong> In your theme, find the line</p>
+            <pre><code>{'{{ article.content }}'}</code></pre>
+            <p>and replace it with</p>
+            <pre><code>{'{% include \'shortcode\' load: article.content %}'}</code></pre>
+            <p>before getting started.</p>
+          </>
         ) : (
           <p>Shortcodes not installed yet! Install them now to get started!</p>
         )}

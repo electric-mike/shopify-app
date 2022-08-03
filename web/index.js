@@ -13,6 +13,7 @@ import {
   getShortcode, 
   getShortcodes, 
   updateShortcode, 
+  deleteShortcode,
   deleteShortcodes, 
   shortcodeCreator 
 } from "./helpers/shortcode-files.js";
@@ -197,6 +198,27 @@ export async function createServer(
       data = await updateShortcode(session, req.headers);
     } catch (e) {
       console.log(`Failed to process shortcode/update: ${e.message}`);
+      status = 500;
+      error = e.message;
+    }
+
+    res.status(status).send({ success: status === 200, error, data: data });
+  });
+
+  app.get("/api/shortcode/delete", async (req, res) => {
+    const session = await Shopify.Utils.loadCurrentSession(
+      req,
+      res,
+      app.get("use-online-tokens")
+    );
+    let status = 200;
+    let error = null;
+    let data = null;
+
+    try {
+      data = await deleteShortcode(session, req.headers.asset);
+    } catch (e) {
+      console.log(`Failed to process shortcode/delete: ${e.message}`);
       status = 500;
       error = e.message;
     }

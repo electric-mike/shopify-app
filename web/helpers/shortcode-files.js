@@ -27,6 +27,20 @@ export async function getShortcodes(session) {
   return assets.filter(file => file.key.includes('shortcode'));
 }
 
+export async function deleteShortcodes(session) {
+  const promises = await Promise.all(SHORTCODE_FILES.map(url => {
+    Asset.delete({
+      session: session,
+      theme_id: THEME_ID,
+      asset: { "key": 'snippets/' + url },
+    });
+
+    return asset
+  }))
+
+  return await Promise.all(promises)
+}
+
 export async function getShortcode(session, key) {
   const asset = await Asset.all({
     session: session,
@@ -47,21 +61,15 @@ export async function updateShortcode(session, headers) {
     });
 }
 
-export async function deleteShortcodes(session) {
-  const promises = await Promise.all(SHORTCODE_FILES.map(url => {
-    Asset.delete({
-      session: session,
-      theme_id: THEME_ID,
-      asset: { "key": 'snippets/' + url },
-    });
+export async function deleteShortcode(session, key) {
+  const asset = Asset.delete({
+    session: session,
+    theme_id: THEME_ID,
+    asset: { "key": key },
+  });
 
-    return asset
-  }))
-
-  return await Promise.all(promises)
+  return asset
 }
-
-
 
 export async function shortcodeCreator(session) {
   const promises = await Promise.all(SHORTCODE_FILES.map(url => {

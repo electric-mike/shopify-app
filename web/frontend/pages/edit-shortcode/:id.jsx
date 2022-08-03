@@ -55,6 +55,25 @@ export default function EditShortcode() {
     }
   }
 
+  const deleteShortcode = async () => {
+    const response = await fetch("/api/shortcode/delete", {
+      headers: {
+        asset: currentShortcode.key
+      }
+    })
+
+    if (response.ok) {
+      setToastProps({ content: "Shortcode deleted!" });
+      navigate('/shortcodes');
+    } else {
+      setIsLoading(false);
+      setToastProps({
+        content: "There was an error updating them shortcode",
+        error: true,
+      });
+    }
+  }
+
   const toastMarkup = toastProps.content && !isRefetchingCount && (
     <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
   );
