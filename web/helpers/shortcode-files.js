@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 // @TODO make dynamic
-const THEME_ID = 121211420856
+const THEME_ID = 127662030988
 
 const SHORTCODE_FILES = [
   'shortcode.liquid',
