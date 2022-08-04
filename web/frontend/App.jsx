@@ -20,10 +20,10 @@ export default function App() {
           <QueryProvider>
             <NavigationMenu
               navigationLinks={[
-                {
-                  label: "Shortcodes",
-                  destination: "/shortcodes",
-                },
+                // {
+                //   label: "Shortcodes",
+                //   destination: "/shortcodes",
+                // },
                 // {
                 //   label: "Page name",
                 //   destination: "/pagename",

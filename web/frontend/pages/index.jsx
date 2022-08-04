@@ -8,19 +8,29 @@ import {
   Link,
   Heading,
 } from "@shopify/polaris";
-import { TitleBar } from "@shopify/app-bridge-react";
-
+import { TitleBar, useNavigate } from "@shopify/app-bridge-react";
 import { trophyImage } from "../assets";
-
 import { ProductsCard, ShortcodesCard } from "../components";
 
 export default function HomePage() {
+  const navigate = useNavigate();
+
+  const viewOnboarding = () => {
+    navigate('/extension-onboarding');
+  }
+
   return (
     <Page narrowWidth>
       <TitleBar title="Welcome" primaryAction={null} />
       <Layout>
         <Layout.Section>
-          <Card sectioned>
+          <Card 
+            sectioned
+            primaryFooterAction={{
+              content: "Read Onboarding Guide",
+              onAction: viewOnboarding
+            }}
+          >
             <Stack
               wrap={false}
               spacing="extraTight"
@@ -30,14 +40,14 @@ export default function HomePage() {
               <Stack.Item fill>
                 <TextContainer spacing="loose">
                   <Heading>Thanks for installing our app! 🎉</Heading>
-                  <p>Get started by following the directions below.</p>
+                  <p>Now that you've installed the app, you now have access to our shortcodes, and can use them to replace existing OS2 blocks.</p>
                 </TextContainer>
               </Stack.Item>
               <Stack.Item>
                 <div style={{ padding: "0 20px" }}>
                   <Image
                     source={trophyImage}
-                    alt="Nice work on building a Shopify app"
+                    alt="Thanks for installing!"
                     width={120}
                   />
                 </div>
@@ -48,9 +58,9 @@ export default function HomePage() {
         {/* <Layout.Section>
           <ProductsCard />
         </Layout.Section> */}
-        <Layout.Section>
+        {/* <Layout.Section>
           <ShortcodesCard />
-        </Layout.Section>
+        </Layout.Section> */}
       </Layout>
     </Page>
   );
