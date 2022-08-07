@@ -42,7 +42,7 @@ Shopify.Context.initialize({
   // This should be replaced with your preferred storage strategy
   // SESSION_STORAGE: new Shopify.Session.SQLiteSessionStorage(DB_PATH),
   SESSION_STORAGE: process.env.NODE_ENV !== 'production' ? 
-    new Shopify.Session.MongoDBSessionStorage("mongodb+srv://electriceye:DU8VFxy0othLzUO4@cluster0.m9d6cmr.mongodb.net/?retryWrites=true&w=majority", "database"),
+    new Shopify.Session.MongoDBSessionStorage("mongodb+srv://electriceye:DU8VFxy0othLzUO4@cluster0.m9d6cmr.mongodb.net/?retryWrites=true&w=majority", "database")
     : new Shopify.Session.SQLiteSessionStorage(DB_PATH)
 });
 
