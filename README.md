@@ -1,4 +1,7 @@
-# Shopify App Template - Node
+# Electric Eye Shopify App
+
+## Based Off Of Shopify App Template - Node
+## &nbsp;
 
 This is a template for building a [Shopify app](https://shopify.dev/apps/getting-started) using Node and React. It contains the basics for building a Shopify app.
 
