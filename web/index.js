@@ -41,7 +41,9 @@ Shopify.Context.initialize({
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
   // SESSION_STORAGE: new Shopify.Session.SQLiteSessionStorage(DB_PATH),
-  SESSION_STORAGE: new Shopify.Session.MongoDBSessionStorage("mongodb+srv://electriceye:DU8VFxy0othLzUO4@cluster0.v6a0mi9.mongodb.net/?retryWrites=true&w=majority", "database"),
+  SESSION_STORAGE: process.env.NODE_ENV !== 'production' ? 
+    new Shopify.Session.MongoDBSessionStorage("mongodb+srv://electriceye:DU8VFxy0othLzUO4@cluster0.m9d6cmr.mongodb.net/?retryWrites=true&w=majority", "database"),
+    : new Shopify.Session.SQLiteSessionStorage(DB_PATH)
 });
 
 Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
