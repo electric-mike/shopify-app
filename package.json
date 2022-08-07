@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@shopify/app": "^3.5.0",
-    "@shopify/cli": "^3.5.0"
+    "@shopify/cli": "^3.5.0",
+    "webpack": "^5.74.0"
   },
   "author": "michaelweaver"
 }
