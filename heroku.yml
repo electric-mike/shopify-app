@@ -1,0 +1,8 @@
+ build:
+     docker:
+        web: Dockerfile
+     config:
+        SHOPIFY_API_KEY=1fd4f9bd5fd3ed66da8206e6265bad58
+        SHOPIFY_API_SECRET='bcd2a8084ff60087fbfaae42c51c5058'
+        SHOPIFY_API_SCOPES=read_products,write_products,read_script_tags,write_script_tags
+        SHOPIFY_SHORTCODES_ID=6f39665b-96bb-4efa-ba0d-f720fa54eabb
