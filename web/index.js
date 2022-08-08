@@ -302,6 +302,8 @@ export async function createServer(
   app.use("/*", async (req, res, next) => {
     const shop = req.query.shop;
     const appInstalled = await AppInstallations.includes(shop);
+    console.log(shop)
+    console.log(appInstalled)
 
     if (shop && !appInstalled) {
       res.redirect(`/api/auth?shop=${shop}`);
