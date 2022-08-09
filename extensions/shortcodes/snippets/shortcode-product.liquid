@@ -1,7 +1,7 @@
 {% assign handle = variable[0] | append: '' %}
 {% assign prod = all_products[handle] %}
 
-{% if prod.title %}
+{% if prod.title != '' %}
 <style>
   .shortcode-product { display: grid; padding: 1em 0; grid-gap: 1.25em; margin-bottom: 1.25em }
   @media(min-width: 768px) { .shortcode-product { grid-template-columns: 0.5fr 1fr; } }
