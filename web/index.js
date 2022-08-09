@@ -8,15 +8,6 @@ import { Shopify, LATEST_API_VERSION } from "@shopify/shopify-api";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import { setupGDPRWebHooks } from "./gdpr.js";
-import productCreator from "./helpers/product-creator.js";
-import { 
-  getShortcode, 
-  getShortcodes, 
-  updateShortcode, 
-  deleteShortcode,
-  deleteShortcodes, 
-  shortcodeCreator 
-} from "./helpers/shortcode-files.js";
 import { BillingInterval } from "./helpers/ensure-billing.js";
 import { AppInstallations } from "./app_installations.js";
 
@@ -126,151 +117,6 @@ export async function createServer(
     res.status(200).send(countData);
   });
 
-  app.get("/api/products/create", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
-
-    try {
-      await productCreator(session);
-    } catch (e) {
-      console.log(`Failed to process products/create: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-    res.status(status).send({ success: status === 200, error });
-  });
-
-  app.get("/api/shortcode/get", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
-    let data = null;
-
-    try {
-      data = await getShortcode(session, req.headers.asset);
-    } catch (e) {
-      console.log(`Failed to process shortcode/get: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-
-    res.status(status).send({ success: status === 200, error, data: data });
-  });
-
-  app.get("/api/shortcodes/get", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
-    let data = null;
-
-    try {
-      data = await getShortcodes(session);
-    } catch (e) {
-      console.log(`Failed to process shortcodes/get: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-
-    res.status(status).send({ success: status === 200, error, data: data });
-  });
-
-  app.get("/api/shortcode/update", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
-    let data = null;
-
-    try {
-      data = await updateShortcode(session, req.headers);
-    } catch (e) {
-      console.log(`Failed to process shortcode/update: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-
-    res.status(status).send({ success: status === 200, error, data: data });
-  });
-
-  app.get("/api/shortcode/delete", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
-    let data = null;
-
-    try {
-      data = await deleteShortcode(session, req.headers.asset);
-    } catch (e) {
-      console.log(`Failed to process shortcode/delete: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-
-    res.status(status).send({ success: status === 200, error, data: data });
-  });
-
-  app.get("/api/shortcodes/create", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
-    let data = null;
-
-    try {
-      data = await shortcodeCreator(session);
-    } catch (e) {
-      console.log(`Failed to process shortcodes/create: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-
-    res.status(status).send({ success: status === 200, error, data: data });
-  });
-
-  app.get("/api/shortcodes/delete", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
-    let data = null;
-
-    try {
-      data = await deleteShortcodes(session);
-    } catch (e) {
-      console.log(`Failed to process shortcodes/delete: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-
-    res.status(status).send({ success: status === 200, error, data: data });
-  });
-
   // All endpoints after this point will have access to a request.body
   // attribute, as a result of the express.json() middleware
   app.use(express.json());
@@ -302,8 +148,6 @@ export async function createServer(
   app.use("/*", async (req, res, next) => {
     const shop = req.query.shop;
     const appInstalled = await AppInstallations.includes(shop);
-    console.log(shop)
-    console.log(appInstalled)
 
     if (shop && !appInstalled) {
       res.redirect(`/api/auth?shop=${shop}`);

@@ -1,173 +1,181 @@
-{% if page %}
-  {% assign load = page.content %}
-{% elsif article %}
-  {% assign load = article.content %}
-{% elsif product %}
-  {% assign load = product.content %}
-{% endif %}
+<div class="{{ section.settings.wrapper_classes }}">
+  {% if page %}
+    {% assign load = page.content %}
+  {% elsif article %}
+    {% assign load = article.content %}
+  {% elsif product %}
+    {% assign load = product.content %}
+  {% endif %}
 
-{% if load %}
-  {%- capture loadnew -%}{{- load | replace: '<!--[', '[' -}}{%- endcapture -%}
-  {%- capture loadnew -%}{{- loadnew | replace: ']-->', ']' -}}{%- endcapture -%}
-  {%- capture loadnew -%}{{- loadnew | replace: ']</p>', ']' -}}{%- endcapture -%}
-  {%- capture loadnew -%}{{- loadnew | replace: '<p>[', '[' -}}{%- endcapture -%}
-  {%- assign shortcodeBeginnings = loadnew | split: '[' -%}
+  {% if load %}
+    {%- capture loadnew -%}{{- load | replace: '<!--[', '[' -}}{%- endcapture -%}
+    {%- capture loadnew -%}{{- loadnew | replace: ']-->', ']' -}}{%- endcapture -%}
+    {%- capture loadnew -%}{{- loadnew | replace: ']</p>', ']' -}}{%- endcapture -%}
+    {%- capture loadnew -%}{{- loadnew | replace: '<p>[', '[' -}}{%- endcapture -%}
+    {%- assign shortcodeBeginnings = loadnew | split: '[' -%}
 
-  {%- if shortcodeBeginnings.size > 1 -%}
+    {%- if shortcodeBeginnings.size > 1 -%}
 
-    {%- for shortcodeBegin in shortcodeBeginnings -%}
-      {%- assign forloopNextIndex = forloop.index0 | plus: 1 -%}
+      {%- for shortcodeBegin in shortcodeBeginnings -%}
+        {%- assign forloopNextIndex = forloop.index0 | plus: 1 -%}
 
-      {%- comment -%}
-        // First Iteration will contain everithing before the first shortcode
-      {%- endcomment -%}
+        {%- comment -%}
+          // First Iteration will contain everithing before the first shortcode
+        {%- endcomment -%}
 
-      {%- if forloop.first -%}
-        {{- shortcodeBegin -}}
-      {%- else -%}
-        {%- assign shortcodeEndings = shortcodeBegin | split: ']' -%}
-        {%- assign contentAfterClosingTag = shortcodeEndings[1] -%}
+        {%- if forloop.first -%}
+          {{- shortcodeBegin -}}
+        {%- else -%}
+          {%- assign shortcodeEndings = shortcodeBegin | split: ']' -%}
+          {%- assign contentAfterClosingTag = shortcodeEndings[1] -%}
 
-        {%- capture shortcodeFull -%}{{- shortcodeEndings[0] -}}{%- endcapture -%}
+          {%- capture shortcodeFull -%}{{- shortcodeEndings[0] -}}{%- endcapture -%}
 
-        {%- assign shortcodes = shortcodeFull | split: '"' -%}
-        {%- assign variables = '' -%}
-        {%- assign keys = '' -%}
-        {%- assign thecycle = 'even' -%}
+          {%- assign shortcodes = shortcodeFull | split: '"' -%}
+          {%- assign variables = '' -%}
+          {%- assign keys = '' -%}
+          {%- assign thecycle = 'even' -%}
 
-        {%- for section in shortcodes -%}
-          {%- if thecycle == 'odd' -%}
-            {%- assign thecycle = 'even' -%}
-          {%- else -%}
-            {%- assign thecycle = 'odd'-%}
-          {%- endif -%}
-
-          {%- if forloop.first -%}
-
-            {%- comment -%}
-              // Handle Closing Tags and pass 'content'
-            {%- endcomment -%}
-
-            {%- assign sectionSpace = section | split: ' ' -%}
-
-            {%- assign content = '' -%}
-
-            {%- assign currentSection = sectionSpace[0] -%}
-
-            {%- assign nextSection = shortcodeBeginnings[forloopNextIndex] -%}
-            {%- assign nextSection = nextSection | split: ']' -%}
-            {%- assign nextSection = nextSection[0] -%}
-            {%- assign nextSection = nextSection | replace: '/', '' -%}
-
-            {%- if currentSection == nextSection -%}
-              {%- assign content = content | append: contentAfterClosingTag -%}
-              {%- assign variables = variables | append: content | append: '||' -%}
-              {%- assign keys = keys | append: 'content' | append: '||' -%}
-              {%- assign contentAfterClosingTag = '' -%}
+          {%- for section in shortcodes -%}
+            {%- if thecycle == 'odd' -%}
+              {%- assign thecycle = 'even' -%}
+            {%- else -%}
+              {%- assign thecycle = 'odd'-%}
             {%- endif -%}
 
-            {%- if forloop.last -%}
-              {%- for space in sectionSpace -%}
+            {%- if forloop.first -%}
 
-                {%- comment -%}
-                  // First Iteration will setup the correct template
-                {%- endcomment -%}
+              {%- comment -%}
+                // Handle Closing Tags and pass 'content'
+              {%- endcomment -%}
 
-                {%- if forloop.first -%}
-                  {%- assign template = space | prepend: 'shortcode-' -%}
-                {%- else -%}
-                  {%- if forloop.last -%}
-                    {%- assign variables = variables | append: space | append: '||' -%}
-                  {%- else -%}
-                    {%- assign variables = variables | append: space | append: '||' -%}
-                  {%- endif -%}
-                {%- endif -%}
-              {%- endfor -%}
-
-              {%- capture output -%}
-                {%- assign buildVariables = variables | split: '||' -%}
-
-                {% comment %} 
-                  Cannot use dyanmic names with "render", only with include
-                  Cannot use include in extension blocks
-                  Only way around this is to use case
-                  AS OF 08.03.22
-                  https://community.shopify.com/c/shopify-design/how-can-i-render-a-snippet-this-name-is-defined-by-a-variable/td-p/640212 
-                {% endcomment %}
-                {% case template %}
-                  {% when "shortcode-youtube" %}
-                    {%- render "shortcode-youtube", variable: buildVariables -%}
-                  {% when "shortcode-product" %}
-                    {%- render "shortcode-product", variable: buildVariables -%}
-                {% endcase %}
-              {%- endcapture -%}
-
-              {%- if output contains 'Liquid error' -%}
-                [{{- shortcodeFull -}}]
-              {%- else -%}
-                {{- output -}}
-              {%- endif -%}
-            {%- else -%}
               {%- assign sectionSpace = section | split: ' ' -%}
 
-              {%- for space in sectionSpace -%}
-                {%- if forloop.first -%}
-                  {%- assign template = sectionSpace.first | prepend: 'shortcode-' -%}
-                {%- else -%}
-                  {%- if forloop.last -%}
-                    {%- assign keys = keys | append: space | replace: '=', '' | append: '||' -%}
+              {%- assign content = '' -%}
+
+              {%- assign currentSection = sectionSpace[0] -%}
+
+              {%- assign nextSection = shortcodeBeginnings[forloopNextIndex] -%}
+              {%- assign nextSection = nextSection | split: ']' -%}
+              {%- assign nextSection = nextSection[0] -%}
+              {%- assign nextSection = nextSection | replace: '/', '' -%}
+
+              {%- if currentSection == nextSection -%}
+                {%- assign content = content | append: contentAfterClosingTag -%}
+                {%- assign variables = variables | append: content | append: '||' -%}
+                {%- assign keys = keys | append: 'content' | append: '||' -%}
+                {%- assign contentAfterClosingTag = '' -%}
+              {%- endif -%}
+
+              {%- if forloop.last -%}
+                {%- for space in sectionSpace -%}
+
+                  {%- comment -%}
+                    // First Iteration will setup the correct template
+                  {%- endcomment -%}
+
+                  {%- if forloop.first -%}
+                    {%- assign template = space | prepend: 'shortcode-' -%}
                   {%- else -%}
-                    {%- assign keys = keys | append: "nokey_" | append: space | replace: '=', '' | append: '||' -%}
-                    {%- assign variables = variables | append: space | append: '||' -%}
+                    {%- if forloop.last -%}
+                      {%- assign variables = variables | append: space | append: '||' -%}
+                    {%- else -%}
+                      {%- assign variables = variables | append: space | append: '||' -%}
+                    {%- endif -%}
                   {%- endif -%}
+                {%- endfor -%}
+
+                {%- capture output -%}
+                  {%- assign buildVariables = variables | split: '||' -%}
+
+                  {% comment %} 
+                    Cannot use dyanmic names with "render", only with include
+                    Cannot use include in extension blocks
+                    Only way around this is to use case
+                    AS OF 08.03.22
+                    https://community.shopify.com/c/shopify-design/how-can-i-render-a-snippet-this-name-is-defined-by-a-variable/td-p/640212 
+                  {% endcomment %}
+                  {% case template %}
+                    {% when "shortcode-youtube" %}
+                      {%- render "shortcode-youtube", variable: buildVariables -%}
+                    {% when "shortcode-product" %}
+                      {%- render "shortcode-product", variable: buildVariables -%}
+                  {% endcase %}
+                {%- endcapture -%}
+
+                {%- if output contains 'Liquid error' -%}
+                  [{{- shortcodeFull -}}]
+                {%- else -%}
+                  {{- output -}}
                 {%- endif -%}
-              {%- endfor -%}
-            {%- endif -%}
-          {%- else -%}
-            {%- if forloop.last -%}
-              {%- assign variables = variables | append: section -%}
-              {%- assign variablesFinal = variables | split: '||' -%}
-              {%- assign keysFinal = keys | replace: ' ', '' | split: '||' -%}
-
-              {%- capture output -%}
-                {% case template %}
-                  {% when "shortcode-youtube" %}
-                    {%- render "shortcode-youtube", variable: variablesFinal, key: keysFinal -%}
-                  {% when "shortcode-product" %}
-                    {%- render "shortcode-product", variable: variablesFinal, key: keysFinal -%}
-                {% endcase %}
-              {%- endcapture -%}
-
-              {%- if output contains 'Liquid error' -%}
-                  [{{- shortcodeFull -}}] 
               {%- else -%}
-                {{- output -}}
+                {%- assign sectionSpace = section | split: ' ' -%}
+
+                {%- for space in sectionSpace -%}
+                  {%- if forloop.first -%}
+                    {%- assign template = sectionSpace.first | prepend: 'shortcode-' -%}
+                  {%- else -%}
+                    {%- if forloop.last -%}
+                      {%- assign keys = keys | append: space | replace: '=', '' | append: '||' -%}
+                    {%- else -%}
+                      {%- assign keys = keys | append: "nokey_" | append: space | replace: '=', '' | append: '||' -%}
+                      {%- assign variables = variables | append: space | append: '||' -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
               {%- endif -%}
             {%- else -%}
-              {%- if thecycle == 'even' -%}
-                {%- assign variables = variables | append: section | append: '||' -%}
-              {%- endif -%}
+              {%- if forloop.last -%}
+                {%- assign variables = variables | append: section -%}
+                {%- assign variablesFinal = variables | split: '||' -%}
+                {%- assign keysFinal = keys | replace: ' ', '' | split: '||' -%}
 
-              {%- if thecycle == 'odd' -%}
-                {%- assign keys = keys | append: section | replace: '=', '' | append: '||' -%}
+                {%- capture output -%}
+                  {% case template %}
+                    {% when "shortcode-youtube" %}
+                      {%- render "shortcode-youtube", variable: variablesFinal, key: keysFinal -%}
+                    {% when "shortcode-product" %}
+                      {%- render "shortcode-product", variable: variablesFinal, key: keysFinal -%}
+                  {% endcase %}
+                {%- endcapture -%}
+
+                {%- if output contains 'Liquid error' -%}
+                    [{{- shortcodeFull -}}] 
+                {%- else -%}
+                  {{- output -}}
+                {%- endif -%}
+              {%- else -%}
+                {%- if thecycle == 'even' -%}
+                  {%- assign variables = variables | append: section | append: '||' -%}
+                {%- endif -%}
+
+                {%- if thecycle == 'odd' -%}
+                  {%- assign keys = keys | append: section | replace: '=', '' | append: '||' -%}
+                {%- endif -%}
               {%- endif -%}
             {%- endif -%}
-          {%- endif -%}
-        {%- endfor -%}
+          {%- endfor -%}
 
-        {{- contentAfterClosingTag -}}
-      {%- endif -%}
-    {%- endfor -%}
-  {%- else -%}
-    {{- load -}}
-  {%- endif -%}  
-{%- endif -%}
+          {{- contentAfterClosingTag -}}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {{- load -}}
+    {%- endif -%}  
+  {%- endif -%}
+</div>
 
 {% schema %}
   {
     "name": "Shortcodes",
     "target": "section",
-    "stylesheet": "shortcodes.css",
-    "javascript": "shortcodes.js"
+    "settings": [
+      {
+        "type": "text",
+        "id": "wrapper_classes",
+        "label": "Parent Wrapper Classes",
+        "info": "Match this to your theme"
+      }
+    ]
   }
 {% endschema %}

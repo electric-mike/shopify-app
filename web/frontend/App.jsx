@@ -20,18 +20,6 @@ export default function App() {
           <QueryProvider>
             <NavigationMenu
               navigationLinks={[
-                // {
-                //   label: "Shortcodes",
-                //   destination: "/shortcodes",
-                // },
-                // {
-                //   label: "Page name",
-                //   destination: "/pagename",
-                // },
-                // {
-                //   label: "Not found",
-                //   destination: "/NotFound",
-                // }
               ]}
             />
             <Routes pages={pages} />
