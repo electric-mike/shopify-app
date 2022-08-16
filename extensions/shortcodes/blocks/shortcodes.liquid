@@ -138,6 +138,8 @@
                       {%- render "shortcode-youtube", variable: variablesFinal, key: keysFinal -%}
                     {% when "shortcode-product" %}
                       {%- render "shortcode-product", variable: variablesFinal, key: keysFinal -%}
+                    {% when "shortcode-atc" %}
+                      {%- render "shortcode-atc", variable: buildVariables -%}
                   {% endcase %}
                 {%- endcapture -%}
 
