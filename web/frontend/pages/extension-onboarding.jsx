@@ -1,4 +1,4 @@
-import { Badge, Card, Page, Layout, TextContainer, Heading, MediaCard } from "@shopify/polaris";
+import { Badge, Banner, Card, Page, Layout, TextContainer, Heading, MediaCard } from "@shopify/polaris";
 import { TitleBar, useNavigate } from "@shopify/app-bridge-react";
 import { beforeImage, afterImage } from "../assets";
 
@@ -46,40 +46,39 @@ export default function PageName() {
         ]}
       />
       <Layout>
+        {/* @TODO make function that checks if theme is OS2? */}
+        <Layout.Section>
+          <Banner
+            title="We Only Support OS2 Themes"
+            status="info"
+            action={{
+              content: "Contact Us",
+              url: 'https://electriceye.io/page/contact/'
+            }}
+          >
+            <p>This app only supports OS2 themes by default. Contact us if you have an OS1 theme and would like this functionality.</p>
+          </Banner>
+        </Layout.Section>
         <Layout.Section twoThirds>
           <Card sectioned>
             <Heading element="h1">Onboarding Guide</Heading>
             <br />
             <TextContainer>
-              <p>Now that you've installed the app, you have access to our Shortcodes app section, and can use them to replace existing OS2 blocks.</p>
-              <p>Our extension works on any OS2 theme, and is intended to replace the "content" on Blog Posts and Product Pages.</p>
+              <p>You now have access to our Shortcodes theme section!</p>
+              <p>Our section works on any OS2 theme, and is intended to replace the "content" on Blog Posts and Product Pages.</p>
               <Badge progress="incomplete" status="warning">Pages are still a work in progress!</Badge>
-              <p>Within Shopify's Customize view, you can <strong>hide</strong> your normal content block, and <strong>replace</strong> it with ours.</p>
+              <p>Within Shopify's Customize view, you simply <strong>hide</strong> your normal content block, and <strong>add</strong> ours below it.</p>
               <p>
-                Once you do that, you can use our suite of shortocdes directly within Shopify's Content Editor, and our extension will replace it with code. 
+                You can then use our suite of shortocdes directly within Shopify's Content Editor.
                 Simply pass it the relevant data, and it will populate accordingly.
               </p>
-            </TextContainer>
-          </Card>
-        </Layout.Section>
-        <Layout.Section oneThird>
-          <Card sectioned>
-            <Heading element="h1">Shortcode Support</Heading>
-            <br />
-            <TextContainer>
-              <p>We currently support {SHORTCODES.length} Shortcodes:</p>
-              {SHORTCODES.map(code => (
-                <Card sectioned>
-                  <p>{code.name}</p>
-                  <p><strong>{code.example}</strong></p>
-                </Card>
-              ))}
+              <p>Our extension runs during the Liquid render cycle, so you'll never see a flash of unstyled content, which is typical in many other applications in the Shopify ecosystem.</p>
             </TextContainer>
           </Card>
         </Layout.Section>
         <Layout.Section oneHalf>
           <MediaCard
-            title="Before Shortcodes"
+            title="1. Add Out Shortcodes Section"
             description="Find the content section in your theme, and add our shortcodes section"
             portrait="true"
             sectioned
@@ -98,8 +97,8 @@ export default function PageName() {
         </Layout.Section>
         <Layout.Section oneHalf>
           <MediaCard
-            title="After Shortcodes"
-            description="Hide the old section, and voila! You have working shortcodes!"
+            title="2. Hide Your Old Content Section"
+            description="Hide the old section, and voila! You have working shortcodes!  🎉"
             portrait="true"
           >
             <img

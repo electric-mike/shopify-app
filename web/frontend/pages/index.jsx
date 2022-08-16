@@ -1,17 +1,43 @@
 import {
+  Avatar,
   Badge,
-  Banner,
   Card,
-  Page,
   Layout,
+  Page,
+  ResourceList,
+  ResourceItem,
   TextContainer,
+  TextStyle,
   Image,
   Stack,
-  Link,
   Heading,
 } from "@shopify/polaris";
 import { TitleBar, useNavigate } from "@shopify/app-bridge-react";
 import { trophyImage, ElectricEyeLogo } from "../assets";
+
+const SHORTCODES = [
+  {
+    id: 1,
+    initials: 'YT',
+    name: 'Youtube',
+    parameters: 'src',
+    example: '[youtube src="YOUTUBE_KEY"]'
+  },
+  {
+    id: 2,
+    initials: 'PV',
+    name: 'Product + View Product',
+    parameters: 'handle',
+    example: '[product handle="PRODUCT_HANDLE"]'
+  },
+  {
+    id: 3,
+    initials: 'PA',
+    name: 'Product + Add To Cart',
+    parameters: 'handle',
+    example: '[product-atc handle="PRODUCT_HANDLE"]'
+  }
+]
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -36,24 +62,7 @@ export default function HomePage() {
         ]}
       />
       <Layout>
-        {/* @TODO make function that checks if theme is OS2? */}
         <Layout.Section>
-          <Banner
-            title="We Only Support OS2 Themes"
-            status="info"
-            action={{
-              content: "Contact Us",
-              url: 'https://electriceye.io/page/contact/'
-            }}
-            secondaryAction={{ 
-              content: 'Learn more',
-              onAction: viewOnboarding
-            }}
-          >
-            <p>This app only supports OS2 themes by default. Contact us if you have an OS1 theme and would like this functionality.</p>
-          </Banner>
-        </Layout.Section>
-        <Layout.Section oneHalf>
           <Card 
             sectioned
             primaryFooterAction={{
@@ -86,7 +95,40 @@ export default function HomePage() {
             </Stack>
           </Card>
         </Layout.Section>
-        <Layout.Section oneHalf>
+        <Layout.Section>
+          <Card sectioned>
+            <Heading element="h1">Available Shortcodes</Heading>
+            <br />
+            <TextContainer>
+              <p>We currently support {SHORTCODES.length} Shortcodes:</p>
+            </TextContainer>
+
+            <ResourceList
+              resourceName={{singular: 'Shortcode', plural: 'Shortcodes'}}
+              items={SHORTCODES}
+              renderItem={(item) => {
+                const {id, name, initials, parameters, example } = item;
+                const media = <Avatar size="medium" name={name} initials={initials} />;
+
+                return (
+                  <ResourceItem
+                    key={id}
+                    id={id}
+                    media={media}
+                    accessibilityLabel={`View details for ${name}`}
+                  >
+                    <h3>
+                      <TextStyle variation="strong">{name}</TextStyle>
+                    </h3>
+                    <p>Parameters: {parameters}</p>
+                    <p>Usage: <strong>{example}</strong></p>
+                  </ResourceItem>
+                );
+              }}
+            />
+          </Card>
+        </Layout.Section>
+        <Layout.Section>
           <Card 
             sectioned
             primaryFooterAction={{
