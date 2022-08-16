@@ -23,11 +23,15 @@ const SHORTCODES = [
   }
 ]
 
-export default function PageName() {
+export default function ExtensionOnboarding() {
   const navigate = useNavigate();
 
   const goHome = () => {
     navigate('/')
+  }
+
+  const viewSupport = () => {
+    navigate('/extension-support');
   }
 
   return (
@@ -35,8 +39,8 @@ export default function PageName() {
       <TitleBar
         title="Extension Onboarding"
         primaryAction={{
-          content: "Contact Us",
-          url: 'https://electriceye.io/page/contact/'
+          content: "Support",
+          onAction: viewSupport,
         }}
         secondaryActions={[
           {
@@ -52,7 +56,7 @@ export default function PageName() {
             title="We Only Support OS2 Themes"
             status="info"
             action={{
-              content: "Contact Us",
+              content: "Contact Support",
               url: 'https://electriceye.io/page/contact/'
             }}
           >

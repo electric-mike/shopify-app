@@ -46,18 +46,22 @@ export default function HomePage() {
     navigate('/extension-onboarding');
   }
 
+  const viewSupport = () => {
+    navigate('/extension-support');
+  }
+
   return (
     <Page>
       <TitleBar 
         title="Welcome"
         primaryAction={{
-          content: "Read Onboarding Guide",
+          content: "Onboarding",
           onAction: viewOnboarding,
         }}
         secondaryActions={[
           {
-            content: "Contact Us",
-            url: 'https://electriceye.io/page/contact/'
+            content: "Support",
+            onAction: viewSupport,
           }
         ]}
       />
@@ -69,6 +73,12 @@ export default function HomePage() {
               content: "Read Onboarding Guide",
               onAction: viewOnboarding
             }}
+            secondaryFooterActions={[
+              {
+                content: "View Support Page",
+                onAction: viewSupport
+              }
+            ]}
           >
             <Stack
               wrap={false}
@@ -132,7 +142,7 @@ export default function HomePage() {
           <Card 
             sectioned
             primaryFooterAction={{
-              content: "Contact Us",
+              content: "Contact Support",
               url: 'https://electriceye.io/page/contact/'
             }}
           >
