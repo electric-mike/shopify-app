@@ -100,6 +100,8 @@
                       {%- render "shortcode-youtube", variable: buildVariables -%}
                     {% when "shortcode-product" %}
                       {%- render "shortcode-product", variable: buildVariables -%}
+                    {% when "shortcode-product-atc" %}
+                      {%- render "shortcode-product-atc", variable: buildVariables -%}
                   {% endcase %}
                 {%- endcapture -%}
 
