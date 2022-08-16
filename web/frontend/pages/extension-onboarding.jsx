@@ -14,6 +14,12 @@ const SHORTCODES = [
     name: 'Product',
     parameters: 'handle',
     example: '[product handle="PRODUCT_HANDLE"]'
+  },
+  {
+    id: 3,
+    name: 'Product + Add To Cart',
+    parameters: 'handle',
+    example: '[product-atc handle="PRODUCT_HANDLE"]'
   }
 ]
 

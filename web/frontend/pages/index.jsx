@@ -1,5 +1,6 @@
 import {
   Badge,
+  Banner,
   Card,
   Page,
   Layout,
@@ -35,6 +36,23 @@ export default function HomePage() {
         ]}
       />
       <Layout>
+        {/* @TODO make function that checks if theme is OS2? */}
+        <Layout.Section>
+          <Banner
+            title="We Only Support OS2 Themes"
+            status="info"
+            action={{
+              content: "Contact Us",
+              url: 'https://electriceye.io/page/contact/'
+            }}
+            secondaryAction={{ 
+              content: 'Learn more',
+              onAction: viewOnboarding
+            }}
+          >
+            <p>This app only supports OS2 themes by default. Contact us if you have an OS1 theme and would like this functionality.</p>
+          </Banner>
+        </Layout.Section>
         <Layout.Section oneHalf>
           <Card 
             sectioned
@@ -52,7 +70,7 @@ export default function HomePage() {
               <Stack.Item fill>
                 <TextContainer spacing="loose">
                   <Heading>Thanks for installing our app! 🎉</Heading>
-                  <p>Now that you've installed the app, you have access to our shortcodes, and can use them to replace existing OS2 blocks.</p>
+                  <p>Now that you've installed the app, you have access to our shortcodes, and can use them to replace existing OS2-based theme blocks.</p>
                   <p>To get started, view our onboarding guide!</p>
                 </TextContainer>
               </Stack.Item>
