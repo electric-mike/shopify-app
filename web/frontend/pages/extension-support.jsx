@@ -46,7 +46,10 @@ export default function Support() {
     },
   ]
 
-  const [faqs, setFaqs] = useState(new Array(FAQs.length).fill(false));
+  const initialArray = new Array(FAQs.length).fill(false)
+  initialArray[0] = true
+
+  const [faqs, setFaqs] = useState(initialArray);
   const toggleFaq = (faqIndex) => {
     const newFaqs = [...faqs];
     newFaqs[faqIndex] = !newFaqs[faqIndex];
@@ -84,7 +87,7 @@ export default function Support() {
         </Layout.Section>
         <Layout.Section>
           <Card sectioned>
-            <Heading element="h1">FAQs</Heading>
+            <Heading element="h1">FAQs 📙</Heading>
             <br />
             <ResourceList
               resourceName={{singular: 'Shortcode', plural: 'Shortcodes'}}

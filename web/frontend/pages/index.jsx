@@ -88,7 +88,7 @@ export default function HomePage() {
             >
               <Stack.Item fill>
                 <TextContainer spacing="loose">
-                  <Heading>Thanks for installing our app! 🎉</Heading>
+                  <Heading>Thanks for installing Electric Shortcodes! ⚡</Heading>
                   <p>Now that you've installed the app, you have access to our shortcodes, and can use them to replace existing OS2-based theme blocks.</p>
                   <p>To get started, view our onboarding guide!</p>
                 </TextContainer>
@@ -167,8 +167,8 @@ export default function HomePage() {
                   <Badge progress="partiallyComplete" status="attention">
                     We are currently in beta
                   </Badge>
-                  <p>This app is developed by Electric Eye, a boutique agency focused on helping brands grow their online sales. Apps are new to us, and we would love to hear your feedback!</p>
-                  <p>If you see areas for improvement, feature requests, or want to work with us, reach out below!</p>
+                  <p>This app is developed by Electric Eye, a boutique agency focused on helping brands grow their online sales.</p>
+                  <p>Apps are new to us, and we would love to hear your feedback! If you see areas for improvement, feature requests, or want to work with us, reach out below!</p>
                 </TextContainer>
               </Stack.Item>
             </Stack>

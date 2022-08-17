@@ -65,7 +65,7 @@ export default function ExtensionOnboarding() {
         </Layout.Section>
         <Layout.Section twoThirds>
           <Card sectioned>
-            <Heading element="h1">Onboarding Guide</Heading>
+            <Heading element="h1">Onboarding Guide 🤓</Heading>
             <br />
             <TextContainer>
               <p>You now have access to our Shortcodes theme section!</p>
